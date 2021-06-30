@@ -14,6 +14,16 @@ def main():
         face = FaceRecognitionStream(embedding=embedding)
         face.detect_face()
     
+    if mode == "youtube-stream":
+        from app.YoutubeStream import YoutubeStream
+        parser.add_argument("--youtube_url", type=str, default="https://www.youtube.com/watch?v=_IQOr7otBQU", help="Youtube Video Link")
+        args = vars(parser.parse_args())
+
+        url = args["youtube_url"]
+
+        youtube = YoutubeStream(embedding=embedding)
+        youtube.watch(url=url)
+    
     if mode == "server":
         from api.index import app
         parser.add_argument("--host", type=str, default="127.0.0.1", help="Host for API")
