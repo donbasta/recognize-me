@@ -58,11 +58,9 @@ class YoutubeStream(object):
             elif metric == "cosine":
                 distance = cosine(person_features, features)
             name = person.get("name")
-            # print(f"name: {name},  distance = {distance}")
             if distance < min_dist_val:
                 min_dist_val = distance
                 min_dist_idx = idx
-        # print(f"Min_dist_val: {min_dist_val}")
         if min_dist_val <= threshold:
             return self.precompute_face_embedding_map[min_dist_idx].get("name")
         else:
@@ -108,7 +106,3 @@ class YoutubeStream(object):
         
         video_capture.release()
         cv2.destroyAllWindows()
-
-
-
-  
