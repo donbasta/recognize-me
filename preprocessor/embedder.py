@@ -2,8 +2,6 @@ from keras_vggface.vggface import VGGFace
 from keras_vggface.utils import preprocess_input
 from keras.preprocessing import image
 
-import cv2
-import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pickle
@@ -17,7 +15,7 @@ def picklify(filename, stuff):
     save_stuff.close()
 
 class Embedder(object):
-    def __init__(self, folder_path, outdir="./data/embeddings/tes2.pickle"):
+    def __init__(self, folder_path, outdir="../data/embeddings/tes.pickle"):
         self.model = VGGFace(model='senet50', include_top=False, input_shape=(224, 224, 3), pooling='avg')
         self.folder = folder_path
         self.folders = list(glob.iglob(os.path.join(self.folder, '*')))
@@ -28,7 +26,7 @@ class Embedder(object):
         img = image.load_img(image_path, target_size=(224, 224))
         pixels = image.img_to_array(img)
         pixels = np.expand_dims(pixels, axis=0)
-        pixels = preprocess_input(pixels, version=2)  # or version=2
+        pixels = preprocess_input(pixels, version=2)
         return pixels
 
     def cal_mean_feature(self, image_folder):
@@ -62,6 +60,7 @@ class Embedder(object):
                 "features": mean_features
             })
         picklify(self.outdir, embeddings)
+        print("done!")
 
 if __name__ == "__main__":
     embedder = Embedder(PROCESSED_FACE_FOLDER)

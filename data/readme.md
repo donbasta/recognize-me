@@ -10,6 +10,8 @@
 
 * extractor_extracted_face: faces extraction from images in extractor_test using FaceExtractor
 
+* raw_images: random images that may contain multiple face in a single picture. Used for testing MultipleFaceExtractor class
+
 * embeddings: face embeddings of each person --> would be best if grouped by sections (named using sectionID)
 	--> API for adding a person embeddings in a section
 	--> API for deleting a person embeddings in a section
