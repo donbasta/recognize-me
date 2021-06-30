@@ -1,22 +1,16 @@
 from flask import Flask, request, jsonify
-import cv2
-import numpy as np
-import os
-import time
-import math
-import pickle
 import logging
 import argparse
 
-from raw_img_processor import FaceExtractor
-from utils import decode_image
+from preprocessor.frame_processor import FrameProcessor
+from .utils import decode_image
 
 ALLOWED_IMAGE_EXTENSIONS = {'jpg','jpeg','png'}
 
 app = Flask("Face Recognition API")
 log = logging.getLogger(__name__)
 
-extractor = FaceExtractor()
+processor = FrameProcessor()
 
 @app.route("/", methods=["GET"])
 def test():
@@ -43,7 +37,12 @@ def add_image_face():
     if request.args.get("save") == "true":
         save_picture = True
     
-    face_img = extractor.extract_faces()
+    face_img, _ = processor.extract_faces()
+    #TODO
+    #1. get several images if possible
+    #2. save face_img array as picture if save_picture == True
+    #3. pipe face_img array to embedder --> embedder needs to be modified to not from a folder, but from array of face_img
+    #4. get the embedder result, insert to a pickle object --> can be section ID, or whatever
 
 @app.route("/predict", methods=["POST"])
 def process_frame():
@@ -51,13 +50,3 @@ def process_frame():
     Processing the video frames (predict + give bounding box + send to backend)
     """
     return "OK"
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser("Face Recognition API")
-    parser.add_argument("--host", type=str, default="127.0.0.1", help="Host for API")
-    parser.add_argument("--port", type=int, default=5000, help="Host for API")
-    args = vars(parser.parse_args())
-    host = args["host"]
-    port = args["port"]
-    print(f"erver running on host {host} and port {port}")
-    app.run(host=host, port=port)
