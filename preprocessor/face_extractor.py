@@ -43,7 +43,7 @@ if __name__ == "__main__":
     filename = input("insert filename: ")
     filename = f'data/raw_images/{filename}'
     folder_path = input("insert folder to save the images in faces folder: ")
-    outdir = f'data/extracted_faces/{folder_path}'
+    outdir = f'data/processed_face/{folder_path}'
     if not os.path.exists(outdir):
         os.mkdir(outdir)
     extractor = MultiFaceExtractor(filename=filename, outdir=outdir)
