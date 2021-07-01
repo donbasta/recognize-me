@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
 import logging
 import argparse
+import os
 
+from PIL import Image
 from preprocessor.frame_processor import FrameProcessor
 from .utils import decode_image
 
@@ -11,13 +13,31 @@ app = Flask("Face Recognition API")
 log = logging.getLogger(__name__)
 
 processor = FrameProcessor()
+face_uploads_dir = "../data/raw_images" if __name__ == "__main__" else "./data/raw_images"
 
 @app.route("/", methods=["GET"])
 def test():
     data = {"message": "API can be accessed!", "status": "server running"}
     return jsonify(data), 200
 
-@app.route("/add", methods=["POST"])
+@app.route("/test-add-image", methods=["POST"])
+def test_add_image():
+    images = request.files.getlist("images")
+    # name = request.args.get
+    name = request.form.get('name')
+    print(f"name: {name}")
+    savedir = os.path.join(face_uploads_dir, name)
+    print("path to save the file: ", savedir)
+    print("ADA GA? ", os.path.exists(savedir))
+    os.makedirs(savedir, exist_ok=True)
+    print(f"number of images uploaded: {len(images)}")
+    for image in images:
+        print(f"name: {image.filename} -- {os.path.join(savedir, image.filename)}")
+        image.save(os.path.join(savedir, image.filename))
+    data = {"saveto": f"{savedir}", "status": "OK"}
+    return jsonify(data), 200
+
+@app.route("/add-image", methods=["POST"])
 def add_image_face():
     """
     Adding person face to server database

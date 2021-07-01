@@ -2,8 +2,8 @@ import cv2
 import os
 import glob
 
-from .constants import PROCESSED_FACE_FOLDER, VIDEOS_FOLDER
-from .frame_processor import FrameProcessor
+from constants import PROCESSED_FACE_FOLDER, VIDEOS_FOLDER
+from frame_processor import FrameProcessor
 
 class VideoToImagesExtractor(object):
     """
@@ -55,10 +55,11 @@ def main():
         name = names[i]
         videos = list(glob.iglob(os.path.join(folder, '*.*')))
         save_folder = os.path.join(PROCESSED_FACE_FOLDER, name)
-        print(save_folder)
+        print(f"processing {save_folder}")
         os.makedirs(save_folder, exist_ok=True)
         for video in videos:
             extractor.extract_faces(video, save_folder)
+    print("donee!")
 
 if __name__ == "__main__":
     main()

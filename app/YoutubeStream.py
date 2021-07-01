@@ -4,6 +4,7 @@ import os
 import glob
 import pickle
 import numpy as np
+import time
 
 from preprocessor.frame_processor import FrameProcessor
 
@@ -71,6 +72,8 @@ class YoutubeStream(object):
         play = vPafy.getbest(preftype="mp4")
         video_capture = cv2.VideoCapture(play.url)
         fps = FPS().start()
+        
+        prev_frame_time = time.time()
         while True:
             if not video_capture.isOpened():
                 sleep(5)
@@ -95,6 +98,12 @@ class YoutubeStream(object):
                 label = f"{predicted_names[i]}"
                 self.draw_label(frame, (face[0], face[1]), label)
             
+            new_frame_time = time.time()
+            cur_fps = 1/(new_frame_time-prev_frame_time)
+            cur_fps = str(cur_fps)
+            prev_frame_time = new_frame_time
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            cv2.putText(frame, cur_fps, (7, 70), font, 3, (100, 255, 0), 3, cv2.LINE_AA)
             cv2.imshow('Face Recognition', frame)
             if cv2.waitKey(20) & 0xFF == ord('q'):
                 break 

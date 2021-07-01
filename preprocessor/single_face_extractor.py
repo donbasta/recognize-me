@@ -2,8 +2,8 @@ import cv2
 import os
 import glob
 
-from .constants import PROCESSED_FACE_FOLDER, RAW_IMAGE_FOLDER
-from .frame_processor import FrameProcessor
+from constants import PROCESSED_FACE_FOLDER, RAW_IMAGE_FOLDER
+from frame_processor import FrameProcessor
 
 class SingleFaceExtractor(object):
     """
@@ -20,7 +20,7 @@ class SingleFaceExtractor(object):
 
     def extract_faces(self, raw_image_file, save_folder, save=True):
         img = cv2.imread(raw_image_file, cv2.IMREAD_COLOR)
-        face_image, _ = processor.extract_faces(img)
+        face_image, _ = self.processor.extract_faces(img)
 
         if face_image is not None:
             imgfile = os.path.basename(raw_image_file) + ".png"
@@ -31,7 +31,9 @@ def main():
     extractor = SingleFaceExtractor()
     folders = list(glob.iglob(os.path.join(RAW_IMAGE_FOLDER, '*')))
     os.makedirs(PROCESSED_FACE_FOLDER, exist_ok=True)
+    print(f"FOLDERS: {folders}")
     names = [os.path.basename(folder) for folder in folders]
+    print(f"NAMES: {names}")
     for i, folder in enumerate(folders):
         name = names[i]
         images = list(glob.iglob(os.path.join(folder, '*.*')))
